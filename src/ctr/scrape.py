@@ -34,9 +34,13 @@ def _clean_html(value: str | None) -> str:
     return " ".join(text.split())
 
 
-def _utc_datetime(timestamp: int | float | str | None) -> datetime:
+def _utc_datetime(timestamp: int | float | str | datetime | None) -> datetime:
     if timestamp is None:
         return datetime.now(UTC)
+    if isinstance(timestamp, datetime):
+        if timestamp.tzinfo is None:
+            return timestamp.replace(tzinfo=UTC)
+        return timestamp.astimezone(UTC)
     if isinstance(timestamp, str):
         parsed = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
         if parsed.tzinfo is None:

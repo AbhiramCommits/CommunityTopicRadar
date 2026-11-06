@@ -1,0 +1,26 @@
+{
+  "tags": [
+    "garch"
+  ],
+  "owner": {
+    "account_id": 510529,
+    "reputation": 121,
+    "user_id": 157211,
+    "user_type": "registered",
+    "profile_image": "https://www.gravatar.com/avatar/30a20cf1541b5d3d17640b6be925d92c?s=256&d=identicon&r=PG&f=y&so-version=2",
+    "display_name": "J126",
+    "link": "https://stats.stackexchange.com/users/157211/j126"
+  },
+  "is_answered": false,
+  "view_count": 24,
+  "answer_count": 0,
+  "score": 2,
+  "last_activity_date": 1793903889,
+  "creation_date": 1793902754,
+  "last_edit_date": 1793903889,
+  "question_id": 677683,
+  "content_license": "CC BY-SA 4.0",
+  "link": "https://stats.stackexchange.com/questions/677683/garch-giving-flat-line-forecast",
+  "title": "Garch Giving Flat Line Forecast",
+  "body": "<p>How do I compute a <strong>confidence interval</strong> for a ratio?</p>\n<pre><code>boot.ci(x)</code></pre>"
+}
