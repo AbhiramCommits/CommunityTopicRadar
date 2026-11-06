@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-11-05T19:28:49.533852-08:00",
+  "source": "raw-replay",
+  "source_site": "stats",
+  "offline": true,
+  "raw_pages": 65,
+  "posts": 6500,
+  "authors": 4210,
+  "tags": 1204,
+  "post_tags": 21153,
+  "engagement_daily": 759,
+  "date_min": "2024-09-23T12:12:22",
+  "date_max": "2026-11-05T18:19:14",
+  "rows_upserted": {
+    "posts": 6500,
+    "authors": 4210,
+    "tags": 1204,
+    "post_tags": 21153
+  },
+  "run_seconds": 3.77
+}

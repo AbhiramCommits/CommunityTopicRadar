@@ -11,7 +11,7 @@ INSERT INTO engagement_daily (
     total_views
 )
 SELECT
-    CAST(created_at AS DATE) AS day,
+    DATE(created_at) AS day,
     source_site,
     COUNT(*) AS posts_created,
     COALESCE(SUM(CASE WHEN answer_count > 0 THEN 1 ELSE 0 END), 0) AS answers_created,
@@ -19,7 +19,7 @@ SELECT
     COALESCE(SUM(CASE WHEN is_answered THEN 1 ELSE 0 END), 0) AS answered_count,
     COALESCE(SUM(view_count), 0) AS total_views
 FROM posts
-GROUP BY CAST(created_at AS DATE), source_site
+GROUP BY DATE(created_at), source_site
 ON CONFLICT (day, source_site) DO UPDATE SET
     posts_created = excluded.posts_created,
     answers_created = excluded.answers_created,
