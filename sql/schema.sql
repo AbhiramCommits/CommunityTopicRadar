@@ -39,6 +39,20 @@ CREATE TABLE IF NOT EXISTS authors (
     last_seen_at   TIMESTAMPTZ NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS answers (
+    id           INTEGER PRIMARY KEY,
+    question_id  INTEGER NOT NULL,
+    author_id    INTEGER,
+    author_name  VARCHAR(255),
+    created_at   TIMESTAMPTZ NOT NULL,
+    score        INTEGER NOT NULL DEFAULT 0,
+    is_accepted  BOOLEAN NOT NULL DEFAULT FALSE,
+    source_site  VARCHAR(100) NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS ix_answers_created_at ON answers (created_at);
+CREATE INDEX IF NOT EXISTS ix_answers_question_id ON answers (question_id);
+
 CREATE TABLE IF NOT EXISTS engagement_daily (
     day              DATE NOT NULL,
     source_site      VARCHAR(100) NOT NULL,

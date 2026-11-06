@@ -15,8 +15,8 @@ from sqlalchemy.orm import Session
 
 from ctr.config import Settings
 from ctr.db import get_engine, init_db, session_scope, upsert_many
-from ctr.models import Author, EngagementDaily, Post, PostTag, Tag
-from ctr.scrape import StackExchangeClient, _utc_datetime, parse_question
+from ctr.models import Answer, Author, EngagementDaily, Post, PostTag, Tag
+from ctr.scrape import StackExchangeClient, _utc_datetime, parse_answer, parse_question
 
 logger = logging.getLogger(__name__)
 SQL_DIR = Path(__file__).resolve().parents[2] / "sql"
@@ -58,6 +58,37 @@ def _load_sample(path: Path) -> list[dict[str, Any]]:
     return [_record_from_sample(item) for item in payload]
 
 
+def _record_answer_from_sample(raw: dict[str, Any]) -> dict[str, Any]:
+    record = dict(raw)
+    record["created_at"] = _utc_datetime(record.get("created_at"))
+    record.setdefault("author_reputation", 0)
+    record.setdefault("author_name", "anonymous")
+    record.setdefault("author_id", None)
+    record.setdefault("score", 0)
+    record.setdefault("is_accepted", False)
+    record.setdefault("source_site", "datascience")
+    record["id"] = int(record["id"])
+    record["question_id"] = int(record["question_id"])
+    return record
+
+
+def _load_answer_sample(path: Path) -> list[dict[str, Any]]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, list):
+        raise ValueError(f"Answer sample file must contain a JSON list: {path}")
+    return [_record_answer_from_sample(item) for item in payload]
+
+
+def _normalize_answers(raw_answers: list[dict[str, Any]], site: str) -> list[dict[str, Any]]:
+    normalized: list[dict[str, Any]] = []
+    for raw in raw_answers:
+        if "answer_id" in raw:
+            normalized.append(parse_answer(raw, site=site))
+        else:
+            normalized.append(_record_answer_from_sample(raw))
+    return normalized
+
+
 def _count(session: Session, model: type[Any]) -> int:
     value = session.scalar(select(func.count()).select_from(model))
     return int(value or 0)
@@ -72,10 +103,11 @@ def run_ingest(
     *,
     offline: bool = False,
     sample_path: Path | str | None = None,
+    answers_path: Path | str | None = None,
     engine: Engine | None = None,
     write_stats: bool = True,
 ) -> dict[str, Any]:
-    """Scrape or replay questions, upsert entities, and rebuild daily engagement.
+    """Scrape or replay questions and answers, then rebuild daily engagement.
 
     When ``offline`` is true and raw API pages are unavailable, the committed
     sample is replayed so CI can run the full pipeline without network access.
@@ -85,10 +117,17 @@ def run_ingest(
     init_db(active_engine)
 
     raw_questions: list[dict[str, Any]] = []
+    raw_answers: list[dict[str, Any]] = []
     source = "api"
     sample = Path(sample_path) if sample_path else settings.sample_dir / "posts_sample.json"
+    inferred_answers = Path(answers_path) if answers_path else sample.with_name(
+        "answers_sample.json"
+    )
+    client: StackExchangeClient | None = None
     if sample_path is not None:
         records = _load_sample(Path(sample_path))
+        if inferred_answers.exists():
+            raw_answers = _load_answer_sample(inferred_answers)
         source = "sample"
     elif offline:
         client = StackExchangeClient(
@@ -103,9 +142,24 @@ def run_ingest(
             raw_questions = client.load_offline_questions()
             records = _normalize_records(raw_questions, settings.site)
             source = "raw-replay"
+            answer_client = StackExchangeClient(
+                site=settings.site,
+                page_size=settings.page_size,
+                delay=settings.request_delay,
+                cache_dir=settings.cache_dir,
+                raw_dir=settings.raw_dir,
+                offline=True,
+                raw_namespace=f"{settings.site}_answers",
+            )
+            try:
+                raw_answers = answer_client.load_offline_answers()
+            except FileNotFoundError:
+                logger.warning("No raw answer pages found; rebuilding with zero answers")
         except FileNotFoundError:
             logger.warning("No raw replay data found; falling back to committed sample")
             records = _load_sample(sample)
+            if inferred_answers.exists():
+                raw_answers = _load_answer_sample(inferred_answers)
             source = "sample"
     else:
         client = StackExchangeClient(
@@ -118,9 +172,21 @@ def run_ingest(
         for page in client.fetch_questions(settings.pages):
             raw_questions.extend(page)
         records = _normalize_records(raw_questions, settings.site)
+        oldest = min(record["created_at"] for record in records)
+        answer_client = StackExchangeClient(
+            site=settings.site,
+            page_size=settings.page_size,
+            delay=settings.request_delay,
+            cache_dir=settings.cache_dir,
+            raw_dir=settings.raw_dir,
+            raw_namespace=f"{settings.site}_answers",
+        )
+        for page in answer_client.fetch_answers(int(oldest.timestamp())):
+            raw_answers.extend(page)
 
     if not records:
         raise RuntimeError("No questions were ingested; check the scrape configuration")
+    answers = _normalize_answers(raw_answers, settings.site)
 
     posts: list[dict[str, Any]] = []
     author_state: dict[int, dict[str, Any]] = {}
@@ -169,8 +235,48 @@ def run_ingest(
         post_tag_names[int(post_row["id"])] = names
         tag_names.update(names)
 
+    answer_rows: list[dict[str, Any]] = []
+    for record in answers:
+        answer_row = {
+            key: record[key]
+            for key in (
+                "id",
+                "question_id",
+                "author_id",
+                "author_name",
+                "created_at",
+                "score",
+                "is_accepted",
+                "source_site",
+            )
+        }
+        answer_rows.append(answer_row)
+        author_id = answer_row["author_id"]
+        if author_id is None:
+            continue
+        observed = author_state.get(author_id)
+        if observed is None:
+            author_state[author_id] = {
+                "id": author_id,
+                "name": answer_row["author_name"] or "anonymous",
+                "reputation": int(record.get("author_reputation", 0)),
+                "first_seen_at": answer_row["created_at"],
+                "last_seen_at": answer_row["created_at"],
+            }
+        else:
+            observed["first_seen_at"] = min(
+                observed["first_seen_at"], answer_row["created_at"]
+            )
+            observed["last_seen_at"] = max(
+                observed["last_seen_at"], answer_row["created_at"]
+            )
+            observed["reputation"] = max(
+                observed["reputation"], int(record.get("author_reputation", 0))
+            )
+
     with session_scope(active_engine) as session:
         post_count = upsert_many(session, Post, posts, ["id"])
+        answer_count = upsert_many(session, Answer, answer_rows, ["id"])
         author_count = upsert_many(
             session, Author, list(author_state.values()), ["id"]
         )
@@ -200,6 +306,7 @@ def run_ingest(
 
         counts = {
             "posts": _count(session, Post),
+            "answers": _count(session, Answer),
             "authors": _count(session, Author),
             "tags": _count(session, Tag),
             "post_tags": _count(session, PostTag),
@@ -210,12 +317,21 @@ def run_ingest(
         ).one()
 
     manifest_path = settings.raw_dir / settings.site / "manifest.json"
+    answer_manifest_path = settings.raw_dir / f"{settings.site}_answers" / "manifest.json"
     raw_page_count = 0
-    if manifest_path.exists():
+    raw_answer_pages = 0
+    for path, key in ((manifest_path, "questions"), (answer_manifest_path, "answers")):
+        if not path.exists():
+            continue
         try:
-            raw_page_count = len(json.loads(manifest_path.read_text(encoding="utf-8")))
+            count = len(json.loads(path.read_text(encoding="utf-8")))
         except json.JSONDecodeError:
-            logger.warning("Could not read raw manifest at %s", manifest_path)
+            logger.warning("Could not read raw manifest at %s", path)
+            continue
+        if key == "questions":
+            raw_page_count = count
+        else:
+            raw_answer_pages = count
     elapsed = round(time.perf_counter() - started, 2)
     stats: dict[str, Any] = {
         "generated_at": datetime.now().astimezone().isoformat(),
@@ -223,11 +339,13 @@ def run_ingest(
         "source_site": settings.site,
         "offline": offline,
         "raw_pages": raw_page_count,
+        "raw_answer_pages": raw_answer_pages,
         **counts,
         "date_min": date_min.isoformat() if date_min else None,
         "date_max": date_max.isoformat() if date_max else None,
         "rows_upserted": {
             "posts": post_count,
+            "answers": answer_count,
             "authors": author_count,
             "tags": len(tag_names),
             "post_tags": len(links),

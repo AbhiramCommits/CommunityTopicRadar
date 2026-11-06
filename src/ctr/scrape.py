@@ -92,6 +92,27 @@ def parse_question(raw: dict[str, Any], site: str | None = None) -> dict[str, An
     }
 
 
+def parse_answer(raw: dict[str, Any], site: str | None = None) -> dict[str, Any]:
+    """Normalize a Stack Exchange answer payload into warehouse fields."""
+    owner = raw.get("owner") or {}
+    author_name = owner.get("display_name") or "anonymous"
+    author_id = owner.get("user_id") or _synthetic_author_id(author_name)
+    answer_id = raw.get("answer_id")
+    if answer_id is None:
+        raise ValueError("Answer payload has no answer_id")
+    return {
+        "id": int(answer_id),
+        "question_id": int(raw["question_id"]),
+        "author_id": author_id,
+        "author_name": author_name,
+        "author_reputation": int(owner.get("reputation") or 0),
+        "created_at": _utc_datetime(raw.get("creation_date")),
+        "score": int(raw.get("score") or 0),
+        "is_accepted": bool(raw.get("is_accepted", False)),
+        "source_site": site or raw.get("source_site") or "datascience",
+    }
+
+
 def _first_number(container: BeautifulSoup, selectors: Sequence[str]) -> int:
     for selector in selectors:
         element = container.select_one(selector)
@@ -269,6 +290,7 @@ class StackExchangeClient:
         offline: bool = False,
         timeout: float = 30.0,
         max_tries: int = 4,
+        raw_namespace: str | None = None,
     ) -> None:
         self.site = site
         self.page_size = page_size
@@ -279,6 +301,7 @@ class StackExchangeClient:
         self.offline = offline
         self.timeout = timeout
         self.max_tries = max_tries
+        self.raw_namespace = raw_namespace or site
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.raw_dir.mkdir(parents=True, exist_ok=True)
 
@@ -288,13 +311,13 @@ class StackExchangeClient:
 
     @property
     def _manifest_path(self) -> Path:
-        return self.raw_dir / self.site / "manifest.json"
+        return self.raw_dir / self.raw_namespace / "manifest.json"
 
     def _cache_path(self, url: str) -> Path:
         return self.cache_dir / f"{self._hash_url(url)}.json"
 
     def _raw_path(self, url: str) -> Path:
-        return self.raw_dir / self.site / f"{self._hash_url(url)}.json"
+        return self.raw_dir / self.raw_namespace / f"{self._hash_url(url)}.json"
 
     def _record_raw(self, url: str, payload: dict[str, Any]) -> None:
         path = self._raw_path(url)
@@ -411,8 +434,59 @@ class StackExchangeClient:
                 page += 1
         logger.info("Fetched %d raw question pages from %s", fetched, self.site)
 
+    def fetch_answers(
+        self,
+        fromdate: int,
+        max_pages: int = 150,
+        todate: int | None = None,
+    ) -> Iterator[list[dict[str, Any]]]:
+        """Yield answer pages created on or after ``fromdate``.
+
+        The same 25-page API ceiling applies to answers, so the cursor restarts
+        with an earlier ``todate`` after each window.
+        """
+        fetched = 0
+        page = 1
+        window_end = todate
+        base_url = f"{API_ROOT}/answers"
+        while fetched < max_pages:
+            params: dict[str, Any] = {
+                "order": "desc",
+                "sort": "creation",
+                "site": self.site,
+                "fromdate": fromdate,
+                "pagesize": self.page_size,
+                "page": page,
+            }
+            if window_end is not None:
+                params["todate"] = window_end
+            payload = self._request(base_url, params)
+            items = payload.get("items", [])
+            if not items:
+                break
+            yield items
+            fetched += 1
+            timestamps = [int(item["creation_date"]) for item in items if "creation_date" in item]
+            if not payload.get("has_more", False):
+                break
+            if page >= MAX_API_PAGE:
+                if not timestamps:
+                    break
+                window_end = min(timestamps) - 1
+                page = 1
+            else:
+                page += 1
+        logger.info("Fetched %d answer pages from %s", fetched, self.site)
+
     def load_offline_questions(self) -> list[dict[str, Any]]:
         """Replay every raw API page recorded for this site."""
+        return self._load_manifest_payloads()
+
+    def load_offline_answers(self) -> list[dict[str, Any]]:
+        """Replay every raw answer page recorded for this site."""
+        return self._load_manifest_payloads()
+
+    def _load_manifest_payloads(self) -> list[dict[str, Any]]:
         if not self._manifest_path.exists():
             raise FileNotFoundError(f"No raw manifest at {self._manifest_path}")
         manifest = json.loads(self._manifest_path.read_text(encoding="utf-8"))
@@ -421,7 +495,9 @@ class StackExchangeClient:
             path = self._manifest_path.parent / entry["file"]
             payload = json.loads(path.read_text(encoding="utf-8"))
             raw.extend(payload.get("items", []))
-        logger.info("Replayed %d raw questions from %s", len(raw), self._manifest_path)
+        logger.info(
+            "Replayed %d raw records from %s", len(raw), self._manifest_path
+        )
         return raw
 
 

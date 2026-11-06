@@ -1,0 +1,198 @@
+{
+  "generated_at": "2026-11-06T03:37:55.028622+00:00",
+  "posts_analyzed": 6500,
+  "answers_analyzed": 7828,
+  "authors_analyzed": 5025,
+  "tags_analyzed": 1204,
+  "days_of_engagement": 759,
+  "date_min": "2024-09-23T12:12:22+00:00",
+  "date_max": "2026-11-05T18:19:14+00:00",
+  "nmf_k": 9,
+  "nmf_reconstruction_error": 77.93256745264222,
+  "topic_top_terms": {
+    "0": [
+      "effects",
+      "effect",
+      "random",
+      "mixed",
+      "model"
+    ],
+    "1": [
+      "distribution",
+      "probability",
+      "random",
+      "function",
+      "sim"
+    ],
+    "2": [
+      "sample",
+      "size",
+      "mean",
+      "sample size",
+      "confidence"
+    ],
+    "3": [
+      "training",
+      "features",
+      "model",
+      "validation",
+      "dataset"
+    ],
+    "4": [
+      "fit",
+      "value",
+      "error",
+      "model",
+      "plot"
+    ],
+    "5": [
+      "regression",
+      "variable",
+      "linear",
+      "variables",
+      "linear regression"
+    ],
+    "6": [
+      "survival",
+      "event",
+      "time",
+      "cox",
+      "treatment"
+    ],
+    "7": [
+      "series",
+      "time series",
+      "time",
+      "stationary",
+      "arima"
+    ],
+    "8": [
+      "test",
+      "tests",
+      "hypothesis",
+      "groups",
+      "group"
+    ]
+  },
+  "trending_top_terms": [
+    {
+      "term": "effects",
+      "current_count": 7,
+      "prior_count": 1,
+      "delta": 6,
+      "pct_change": 600.0,
+      "z_score": 2.061769351101829,
+      "kind": "keyword"
+    },
+    {
+      "term": "random effects",
+      "current_count": 4,
+      "prior_count": 0,
+      "delta": 4,
+      "pct_change": 100.0,
+      "z_score": 1.8973665961010278,
+      "kind": "keyword"
+    },
+    {
+      "term": "statistical",
+      "current_count": 6,
+      "prior_count": 1,
+      "delta": 5,
+      "pct_change": 500.0,
+      "z_score": 1.7891297386368816,
+      "kind": "keyword"
+    },
+    {
+      "term": "glmmtmb",
+      "current_count": 3,
+      "prior_count": 0,
+      "delta": 3,
+      "pct_change": 100.0,
+      "z_score": 1.6180796699117812,
+      "kind": "tag"
+    },
+    {
+      "term": "age",
+      "current_count": 3,
+      "prior_count": 0,
+      "delta": 3,
+      "pct_change": 100.0,
+      "z_score": 1.6180796699117812,
+      "kind": "keyword"
+    }
+  ],
+  "content_gaps_top": [
+    {
+      "topic": "lasso",
+      "posts": 53,
+      "answer_rate": 0.4716981132075472,
+      "median_views": 170.0,
+      "gap_score": 0.3942600309003231,
+      "example_post_url": "https://stats.stackexchange.com/questions/674691/equivalence-of-constraint-form-and-penalized-form-in-lassographical-lasso",
+      "accepted_answer_rate": 0.24528301886792453,
+      "median_time_to_first_answer_hours": 5.027222222222222,
+      "demand_percentile": 0.7462779156327544
+    },
+    {
+      "topic": "difference-in-difference",
+      "posts": 40,
+      "answer_rate": 0.3,
+      "median_views": 139.0,
+      "gap_score": 0.3847394540942928,
+      "example_post_url": "https://stats.stackexchange.com/questions/665188/staggered-diff-in-diff-with-different-fixed-effects",
+      "accepted_answer_rate": 0.125,
+      "median_time_to_first_answer_hours": 59.82833333333333,
+      "demand_percentile": 0.5496277915632755
+    },
+    {
+      "topic": "classification",
+      "posts": 112,
+      "answer_rate": 0.4642857142857143,
+      "median_views": 149.5,
+      "gap_score": 0.37819035802906775,
+      "example_post_url": "https://stats.stackexchange.com/questions/656420/how-can-minimalist-models-achieve-even-higher-accuracy-on-mnist",
+      "accepted_answer_rate": 0.20535714285714285,
+      "median_time_to_first_answer_hours": 3.582638888888889,
+      "demand_percentile": 0.7059553349875931
+    },
+    {
+      "topic": "distributions",
+      "posts": 179,
+      "answer_rate": 0.5642458100558659,
+      "median_views": 170.0,
+      "gap_score": 0.3643899801766084,
+      "example_post_url": "https://stats.stackexchange.com/questions/655383/how-exactly-is-empirical-kl-divergence-defined-and-how-is-it-calculated",
+      "accepted_answer_rate": 0.24581005586592178,
+      "median_time_to_first_answer_hours": 5.201527777777778,
+      "demand_percentile": 0.8362282878411911
+    },
+    {
+      "topic": "mgcv",
+      "posts": 122,
+      "answer_rate": 0.5573770491803278,
+      "median_views": 171.5,
+      "gap_score": 0.364367652442745,
+      "example_post_url": "https://stats.stackexchange.com/questions/656878/choosing-penalty-for-gam-in-mgcv-difference-between-bs-ts-or-select-true",
+      "accepted_answer_rate": 0.36065573770491804,
+      "median_time_to_first_answer_hours": 10.213611111111112,
+      "demand_percentile": 0.8232009925558312
+    }
+  ],
+  "kmeans_k": 8,
+  "kmeans_silhouette": 0.39401510142541873,
+  "dbscan_silhouette": 0.8377394745102209,
+  "dbscan_clusters": 2,
+  "segment_sizes": {
+    "answerer": 246,
+    "asker": 9,
+    "champion": 5,
+    "lurker": 4765
+  },
+  "anomaly_count": 74,
+  "anomaly_days": 57,
+  "robust_z_days": 43,
+  "isolation_forest_days": 23,
+  "iforest_precision": 0.391304347826087,
+  "iforest_recall": 0.20930232558139536,
+  "analysis_seconds": 14.65
+}

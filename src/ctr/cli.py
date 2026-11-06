@@ -69,6 +69,7 @@ def handle_ingest(args: argparse.Namespace) -> int:
     )
     rows = [
         ["posts", f"{stats['posts']:,}"],
+        ["answers", f"{stats['answers']:,}"],
         ["authors", f"{stats['authors']:,}"],
         ["tags", f"{stats['tags']:,}"],
         ["post_tags", f"{stats['post_tags']:,}"],

@@ -69,7 +69,7 @@ class PostTag(Base):
 
 
 class Author(Base):
-    """A community member observed as a question author."""
+    """A community member observed as a question author or answerer."""
 
     __tablename__ = "authors"
 
@@ -78,6 +78,30 @@ class Author(Base):
     reputation: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     first_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     last_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
+class Answer(Base):
+    """An answer observed in the scraped creation window.
+
+    Answers are kept even when their parent question falls outside the
+    question sample; they still describe real contributor activity.
+    """
+
+    __tablename__ = "answers"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    question_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    author_id: Mapped[int | None] = mapped_column(Integer)
+    author_name: Mapped[str | None] = mapped_column(String(255))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    score: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    is_accepted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    source_site: Mapped[str] = mapped_column(String(100), nullable=False)
+
+    __table_args__ = (
+        Index("ix_answers_created_at", "created_at"),
+        Index("ix_answers_question_id", "question_id"),
+    )
 
 
 class EngagementDaily(Base):
