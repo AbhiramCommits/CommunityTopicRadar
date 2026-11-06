@@ -1,0 +1,10 @@
+topic_id,topic_label,top_terms,posts,answer_rate,median_views,gap_score
+0,effects / effect / random,"effects, effect, random, mixed, model, fixed, random effects, fixed effects, linear mixed, mixed effects",473,0.6405919661733616,141.0,0.09983556495184402
+1,distribution / probability / random,"distribution, probability, random, function, sim, mid, let, random variables, given, likelihood",1289,0.5756400310318076,155.0,0.34184553055771055
+2,sample / size / mean,"sample, size, mean, sample size, confidence, standard, population, interval, deviation, standard deviation",676,0.5976331360946746,151.5,0.2011834319526627
+3,training / features / model,"training, features, model, validation, dataset, train, learning, set, feature, using",1009,0.46878097125867196,127.0,0.2951216826340712
+4,fit / value / error,"fit, value, error, model, plot, na, frame, factor, glm, residuals",653,0.6324655436447167,159.0,0.24502297090352215
+5,regression / variable / linear,"regression, variable, linear, variables, linear regression, logistic, model, logistic regression, regression model, dependent",793,0.6229508196721312,161.0,0.3351548269581056
+6,survival / event / time,"survival, event, time, cox, treatment, hazard, age, analysis, patients, covariates",485,0.6474226804123712,155.0,0.16649484536082473
+7,series / time series / time,"series, time series, time, stationary, arima, forecast, trend, forecasting, year, seasonal",376,0.45478723404255317,115.0,0.06057919621749409
+8,test / tests / hypothesis,"test, tests, hypothesis, groups, group, significant, statistical, testing, difference, different",746,0.6514745308310992,156.0,0.25171283884420614
