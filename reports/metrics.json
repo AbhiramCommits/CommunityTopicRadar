@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-06T03:37:55.028622+00:00",
+  "generated_at": "2026-11-06T03:46:52.730016+00:00",
   "posts_analyzed": 6500,
   "answers_analyzed": 7828,
   "authors_analyzed": 5025,
@@ -194,5 +194,5 @@
   "isolation_forest_days": 23,
   "iforest_precision": 0.391304347826087,
   "iforest_recall": 0.20930232558139536,
-  "analysis_seconds": 14.65
+  "analysis_seconds": 20.95
 }
