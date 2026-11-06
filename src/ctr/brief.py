@@ -39,6 +39,7 @@ class TemplateSummarizer:
         return "keep monitoring it and refresh the explainer every quarter"
 
     def summarize(self, topic: dict[str, Any]) -> str:
+        """Return a deterministic three-sentence brief from topic facts."""
         label = str(topic["label"])
         posts = int(topic.get("posts", 0))
         answer_rate = float(topic.get("answer_rate", 0.0))

@@ -25,7 +25,7 @@ def test_ingest_sample_and_idempotence(settings, memory_engine) -> None:
     assert first["authors"] == 210
     assert first["tags"] == 282
     assert first["post_tags"] == 619
-    assert first["engagement_daily"] == 60
+    assert first["engagement_daily"] == 63
     assert first["source"] == "sample"
 
     second = run_ingest(
@@ -44,7 +44,7 @@ def test_ingest_sample_and_idempotence(settings, memory_engine) -> None:
         assert session.scalar(select(func.count()).select_from(Author)) == 210
         assert session.scalar(select(func.count()).select_from(Tag)) == 282
         assert session.scalar(select(func.count()).select_from(PostTag)) == 619
-        assert session.scalar(select(func.count()).select_from(EngagementDaily)) == 60
+        assert session.scalar(select(func.count()).select_from(EngagementDaily)) == 63
 
 
 def test_ingest_offline_falls_back_to_sample(settings, memory_engine) -> None:

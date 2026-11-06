@@ -56,13 +56,13 @@ The measured build used the public **Cross Validated** community
 (`stats.stackexchange.com`, Stack Exchange site slug `stats`):
 
 - Source: Stack Exchange API 2.3 questions with `filter=withbody`, plus answers in the same creation window.
-- Date range: **2024-09-23 to 2026-11-05** (774 calendar days, 759 days with engagement).
+- Date range: **2024-09-23 to 2026-11-05** (774 calendar days, 773 days with engagement).
 - Posts: **6,500**.
 - Answers: **7,828**.
 - Authors: **5,025**.
 - Tags: **1,204**.
 - Post-tag links: **21,153**.
-- Daily engagement rows: **759**.
+- Daily engagement rows: **773**.
 - Raw API pages: **65 question pages** and **79 answer pages**.
 
 The full raw dump stays untracked. `data/sample/posts_sample.json` (200 posts) and
@@ -107,6 +107,22 @@ Power BI: import `exports/dim_topic.csv`, `dim_author.csv`, `dim_date.csv`,
 `topic_id`, `author_id` and `date_key`. The exact DAX measures are in
 `exports/powerbi_measures.md`; equivalent PostgreSQL views are in `sql/views.sql`.
 
+### Make targets
+
+```bash
+make setup       # create .venv and install pinned dependencies
+make all         # ingest --offline, analyze, brief, export
+make test        # pytest with the 85% coverage gate
+make lint        # ruff
+make dashboard   # streamlit run src/ctr/dashboard.py
+```
+
+`make all` works from a clean checkout: with no `data/raw` present it replays the
+committed sample, and with raw pages present it replays the full measured dataset. The
+scheduled-run design, cron example and weekly GitHub Actions workflow are in
+`scripts/schedule.md`, `scripts/cron.example` and `.github/workflows/scheduled-scrape.yml`.
+
+
 ## Results (measured)
 
 All values below come from the committed artifacts in `reports/` and `exports/`, generated
@@ -118,7 +134,7 @@ from the full 6,500-post dataset.
 | Answers ingested | 7,828 |
 | Authors | 5,025 |
 | Tags | 1,204 |
-| Days of engagement history | 759 |
+| Days of engagement history | 773 |
 | Chosen NMF topic count | 9 |
 | Top trending term | effects, +600.0% week over week |
 | Trending terms 2–5 | random effects +100.0%, statistical +500.0%, glmmtmb +100.0%, age +100.0% |
@@ -127,11 +143,12 @@ from the full 6,500-post dataset.
 | K-Means clusters / silhouette | 8 / 0.394 |
 | DBSCAN silhouette | 0.838 |
 | Segment sizes | 4,765 lurker, 246 answerer, 9 asker, 5 champion |
-| Anomalies | 74 metric-day rows across 57 days |
-| IsolationForest vs robust-z | precision 0.391, recall 0.209 |
+| Anomalies | 82 metric-day rows across 63 days |
+| IsolationForest vs robust-z | precision 0.333, recall 0.170 |
 | Tests | 45 passed |
-| Coverage on `src/ctr` excluding `dashboard.py` | 86.14% |
-| Full offline pipeline wall-clock (`ingest` → `analyze` → `brief` → `export`) | 33.29 seconds |
+| Coverage on `src/ctr` excluding `dashboard.py` | 86.18% |
+| Full offline pipeline wall-clock (`ingest` → `analyze` → `brief` → `export`) | 33.92 seconds |
+| Clean-checkout `make all` wall-clock (sample fallback) | 18.18 seconds |
 
 Trending terms are ranked by the week-over-week two-proportion z-score. A `+100.0%` change
 means the term had no occurrences in the prior complete week. `+600.0%` means it moved from

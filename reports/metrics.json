@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-11-06T03:46:52.730016+00:00",
+  "generated_at": "2026-11-06T03:53:07.331918+00:00",
   "posts_analyzed": 6500,
   "answers_analyzed": 7828,
   "authors_analyzed": 5025,
   "tags_analyzed": 1204,
-  "days_of_engagement": 759,
+  "days_of_engagement": 773,
   "date_min": "2024-09-23T12:12:22+00:00",
   "date_max": "2026-11-05T18:19:14+00:00",
   "nmf_k": 9,
@@ -188,11 +188,11 @@
     "champion": 5,
     "lurker": 4765
   },
-  "anomaly_count": 74,
-  "anomaly_days": 57,
-  "robust_z_days": 43,
-  "isolation_forest_days": 23,
-  "iforest_precision": 0.391304347826087,
-  "iforest_recall": 0.20930232558139536,
-  "analysis_seconds": 20.95
+  "anomaly_count": 82,
+  "anomaly_days": 63,
+  "robust_z_days": 47,
+  "isolation_forest_days": 24,
+  "iforest_precision": 0.3333333333333333,
+  "iforest_recall": 0.1702127659574468,
+  "analysis_seconds": 19.25
 }

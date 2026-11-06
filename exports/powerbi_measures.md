@@ -10,7 +10,7 @@ DISTINCTCOUNT ( fact_post[author_id] )
 
 Answer Rate =
 DIVIDE (
-    CALCULATE ( COUNTROWS ( fact_post ), fact_post[is_answered] = TRUE () ),
+    CALCULATE ( COUNTROWS ( fact_post ), fact_post[is_answered] = TRUE() ),
     COUNTROWS ( fact_post )
 )
 

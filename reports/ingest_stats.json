@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T19:46:29.035441-08:00",
+  "generated_at": "2026-11-05T19:52:45.695726-08:00",
   "source": "raw-replay",
   "source_site": "stats",
   "offline": true,
@@ -10,7 +10,7 @@
   "authors": 5025,
   "tags": 1204,
   "post_tags": 21153,
-  "engagement_daily": 759,
+  "engagement_daily": 773,
   "date_min": "2024-09-23T12:12:22",
   "date_max": "2026-11-05T18:19:14",
   "rows_upserted": {
@@ -20,5 +20,5 @@
     "tags": 1204,
     "post_tags": 21153
   },
-  "run_seconds": 4.4
+  "run_seconds": 3.96
 }

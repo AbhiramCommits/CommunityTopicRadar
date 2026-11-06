@@ -19,6 +19,11 @@ answer_daily AS (
         COUNT(*) AS answers_created
     FROM answers
     GROUP BY DATE(created_at), source_site
+),
+date_spine AS (
+    SELECT day, source_site FROM post_daily
+    UNION
+    SELECT day, source_site FROM answer_daily
 )
 INSERT INTO engagement_daily (
     day,
@@ -30,16 +35,18 @@ INSERT INTO engagement_daily (
     total_views
 )
 SELECT
-    p.day,
-    p.source_site,
-    p.posts_created,
+    d.day,
+    d.source_site,
+    COALESCE(p.posts_created, 0) AS posts_created,
     COALESCE(a.answers_created, 0) AS answers_created,
-    p.unique_authors,
-    p.answered_count,
-    p.total_views
-FROM post_daily AS p
+    COALESCE(p.unique_authors, 0) AS unique_authors,
+    COALESCE(p.answered_count, 0) AS answered_count,
+    COALESCE(p.total_views, 0) AS total_views
+FROM date_spine AS d
+LEFT JOIN post_daily AS p
+    ON p.day = d.day AND p.source_site = d.source_site
 LEFT JOIN answer_daily AS a
-    ON p.day = a.day AND p.source_site = a.source_site
+    ON a.day = d.day AND a.source_site = d.source_site
 ON CONFLICT (day, source_site) DO UPDATE SET
     posts_created = excluded.posts_created,
     answers_created = excluded.answers_created,

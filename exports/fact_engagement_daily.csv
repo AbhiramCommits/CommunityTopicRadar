@@ -26,7 +26,7 @@ date_key,posts_created,answers_created,unique_authors,answered_count,total_views
 20241017,29,28,29,17,8044,True
 20241018,17,24,17,9,4396,False
 20241019,13,14,13,5,1995,False
-20241020,20,6,20,8,3642,False
+20241020,20,6,20,8,3642,True
 20241021,15,27,15,11,3854,False
 20241022,15,25,15,11,3845,False
 20241023,24,25,23,16,6673,True
@@ -158,7 +158,7 @@ date_key,posts_created,answers_created,unique_authors,answered_count,total_views
 20250226,19,14,19,8,3924,False
 20250227,20,16,20,9,3431,False
 20250228,13,18,13,8,3049,False
-20250301,16,16,16,15,6572,False
+20250301,16,16,16,15,6572,True
 20250302,11,18,11,3,2640,False
 20250303,13,14,13,9,3748,False
 20250304,22,24,22,10,4099,False
@@ -271,6 +271,7 @@ date_key,posts_created,answers_created,unique_authors,answered_count,total_views
 20250619,15,7,14,6,3636,False
 20250620,10,8,10,4,1551,False
 20250621,8,11,8,4,1826,False
+20250622,0,9,0,0,0,True
 20250623,5,7,5,4,1646,False
 20250624,13,7,13,7,2218,False
 20250625,11,18,11,8,2539,False
@@ -463,12 +464,13 @@ date_key,posts_created,answers_created,unique_authors,answered_count,total_views
 20251229,3,3,3,0,274,False
 20251230,4,3,4,3,621,False
 20251231,3,13,3,3,1629,False
+20260101,0,5,0,0,0,False
 20260102,3,9,3,3,26372,True
 20260103,2,5,2,0,146,False
 20260104,2,7,2,2,274,False
 20260105,7,4,7,3,775,False
 20260106,4,6,4,2,425,False
-20260107,11,10,11,4,1631,False
+20260107,11,10,11,4,1631,True
 20260108,5,7,5,4,949,False
 20260109,16,14,16,11,3297,True
 20260110,4,9,4,2,358,False
@@ -541,6 +543,7 @@ date_key,posts_created,answers_created,unique_authors,answered_count,total_views
 20260318,5,9,5,4,607,False
 20260319,1,7,1,1,138,False
 20260320,9,12,9,6,1547,False
+20260321,0,3,0,0,0,False
 20260322,2,5,2,2,557,False
 20260323,6,4,6,1,657,False
 20260324,7,8,7,6,6120,True
@@ -562,6 +565,7 @@ date_key,posts_created,answers_created,unique_authors,answered_count,total_views
 20260409,8,8,8,6,1927,False
 20260410,6,7,6,2,502,False
 20260411,3,5,3,2,850,False
+20260412,0,3,0,0,0,False
 20260413,9,5,8,6,739,False
 20260414,2,5,2,1,359,False
 20260415,6,10,6,3,1139,False
@@ -589,6 +593,7 @@ date_key,posts_created,answers_created,unique_authors,answered_count,total_views
 20260507,4,3,4,2,540,False
 20260508,6,6,6,2,686,False
 20260509,2,7,2,2,375,False
+20260510,0,3,0,0,0,True
 20260511,5,2,5,4,982,False
 20260512,1,3,1,1,108,False
 20260513,6,4,6,2,902,False
@@ -605,7 +610,7 @@ date_key,posts_created,answers_created,unique_authors,answered_count,total_views
 20260524,4,2,4,3,439,False
 20260525,1,4,1,1,359,False
 20260526,6,5,6,6,1073,False
-20260527,4,9,4,3,797,False
+20260527,4,9,4,3,797,True
 20260528,2,8,2,1,230,False
 20260529,3,7,3,1,298,False
 20260530,2,1,2,2,245,False
@@ -655,9 +660,11 @@ date_key,posts_created,answers_created,unique_authors,answered_count,total_views
 20260713,6,12,6,3,1678,True
 20260714,3,2,3,2,1467,False
 20260715,7,13,7,5,844,True
+20260716,0,6,0,0,0,False
 20260717,5,5,5,3,873,False
 20260718,2,13,2,2,405,True
 20260719,1,6,1,1,252,False
+20260720,0,8,0,0,0,False
 20260721,6,9,6,4,1800,True
 20260722,3,4,3,3,625,False
 20260723,1,6,1,1,104,False
@@ -674,7 +681,9 @@ date_key,posts_created,answers_created,unique_authors,answered_count,total_views
 20260803,3,3,3,1,281,False
 20260804,5,9,5,1,675,False
 20260805,4,5,4,2,379,False
+20260806,0,9,0,0,0,False
 20260807,3,1,3,2,663,False
+20260808,0,6,0,0,0,False
 20260809,2,6,2,2,1150,False
 20260810,9,14,8,7,1896,True
 20260811,2,3,2,1,208,False
@@ -696,6 +705,7 @@ date_key,posts_created,answers_created,unique_authors,answered_count,total_views
 20260827,7,2,7,5,968,False
 20260828,2,9,2,1,324,False
 20260829,3,5,3,2,539,False
+20260830,0,9,0,0,0,False
 20260831,6,8,4,2,910,False
 20260901,8,6,8,3,619,True
 20260902,5,1,5,1,477,False
@@ -714,8 +724,10 @@ date_key,posts_created,answers_created,unique_authors,answered_count,total_views
 20260915,5,3,5,3,544,False
 20260917,3,8,2,3,1183,False
 20260918,6,9,6,2,624,False
+20260919,0,3,0,0,0,False
 20260920,2,7,2,2,262,False
 20260921,1,3,1,1,264,False
+20260922,0,8,0,0,0,False
 20260923,5,3,5,3,644,False
 20260924,3,2,3,1,360,False
 20260925,4,5,4,2,755,False
@@ -728,6 +740,7 @@ date_key,posts_created,answers_created,unique_authors,answered_count,total_views
 20261002,3,6,3,1,211,False
 20261003,1,3,1,1,358,False
 20261004,5,3,5,3,653,False
+20261005,0,3,0,0,0,False
 20261006,4,5,4,2,461,False
 20261007,1,6,1,0,215,False
 20261008,5,4,4,2,1123,False
@@ -735,6 +748,7 @@ date_key,posts_created,answers_created,unique_authors,answered_count,total_views
 20261010,1,6,1,1,759,False
 20261011,2,5,2,1,901,False
 20261012,2,3,2,2,195,False
+20261013,0,4,0,0,0,False
 20261014,4,6,4,3,515,False
 20261015,3,5,3,2,363,False
 20261016,5,6,5,3,1131,False
