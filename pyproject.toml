@@ -24,7 +24,7 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 known-first-party = ["ctr"]
 
 [tool.pytest.ini_options]
-pythonpath = ["src"]
+pythonpath = ["src", "."]
 testpaths = ["tests"]
 addopts = "-q"
 
